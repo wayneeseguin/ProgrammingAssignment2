@@ -18,7 +18,7 @@ makeCacheMatrix <- function(x = matrix()) {
     get <- function() x
 
     # Define CacheMatrix function to set the cache
-    setCache <- function(inv) cache <<- inv
+    setCache <- function(m) cache <<- m
 
     # Define CacheMatrix function to get the cache
     getCache <- function() cache
