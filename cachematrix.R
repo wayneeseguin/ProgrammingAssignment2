@@ -9,22 +9,19 @@
 ## Returns: a list of functions defined on the given CacheMatrix
 ##
 makeCacheMatrix <- function(x = matrix()) {
-    # Define CacheMatrix Function to set the object and inverse cache
+    # Define CacheMatrix Function to set the object and cache
     set <- function(y) {
         x <<- y
-        inverse <<- NULL
+        cache <<- NULL
     }
     # Define CacheMatrix Function to get the Matrix
     get <- function() x
 
-    # Define CacheMatrix function to set the inverse in the cache
-    setInverse <- function(inv) inverse <<- inv
+    # Define CacheMatrix function to set the cache
+    setCache <- function(inv) cache <<- inv
 
-    # Define CacheMatrix function to get the cached inverse
-    getInverse <- function(inverse)
-
-    # Define CacheMatrix function to tell if a cached inverse exists
-    isCached <- function() !is.null(inverse)
+    # Define CacheMatrix function to get the cache
+    getCache <- function() cache
 
     # Cache the given matrix object
     set(x)
@@ -32,10 +29,9 @@ makeCacheMatrix <- function(x = matrix()) {
     # Return the list of defined functions on the new CacheMatrix object
     list(set = set,
          get = get,
-         setInverse = setInverse,
-         getInverse = getInverse,
-         isCached = isCached
-        )
+         setCache = setCache,
+         getCache = getCache
+         )
 }
 
 ##
@@ -49,15 +45,18 @@ makeCacheMatrix <- function(x = matrix()) {
 ## Returns: A matrix which is the inverse of the original
 ##
 cacheSolve <- function(x, ...) {
+    # Fetch the cache value
+    result <- x$getCache()
+
     # If the computation is not cached,
-    if(!x$isCached()) {
+    if(is.null(result)) {
         # Perform the computation
-        inv <- solve(x$get(),...)
+        result <- solve(x$get(),...)
 
         # and set the results to the CacheMatrix's cache.
-        x$setInverse()
+        x$setCache(result)
     }
 
-    # Return the inverse from the cache.
-    x$getInverse()
+    # Return the cached inverse
+    result
 }
